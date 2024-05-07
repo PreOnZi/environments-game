@@ -1,30 +1,30 @@
 let grid;
 let cols = 4;
 let rows = 4;
-const w = 100;  // 每个格子的宽度和高度
+const w = 100; 
 let gameover = false;
 
-// 雷的位置数组
+
 const mines = [
   [0, 0], [0, 2], [0, 3], 
   [1, 1], [1, 3],
   [2, 0], [2, 2], [2, 3]
 ];
 
-// 胜利的条件：必须揭示的非雷格子
+
 const mustReveal = [
   [0, 1], [1, 0], [1, 2], [2, 1]
 ];
-let revealedCount = 0;  // 记录已揭示的非雷格子数
+let revealedCount = 0;  
 
 function setup() {
   createCanvas(401, 401);
   grid = make2DArray(cols, rows);
-  // 初始化格子
+ 
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       grid[i][j] = new Cell(i, j, w);
-      // 判断当前格子是否是雷
+     
       for (let mine of mines) {
         if (mine[0] === i && mine[1] === j) {
           grid[i][j].bee = true;
@@ -54,7 +54,7 @@ function mousePressed() {
           displayMessage("Game Over!");
         } else {
           grid[i][j].reveal();
-          // 检查是否是必须揭示的格子
+         
           if (checkMustReveal(i, j)) {
             revealedCount++;
             if (revealedCount === mustReveal.length) {
@@ -69,14 +69,14 @@ function mousePressed() {
   }
 }
 
-// 显示所有雷
+
 function revealMines() {
   for (let mine of mines) {
     grid[mine[0]][mine[1]].reveal();
   }
 }
 
-// 创建二维数组
+
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
   for (let i = 0; i < cols; i++) {
@@ -85,7 +85,7 @@ function make2DArray(cols, rows) {
   return arr;
 }
 
-// Cell 类定义
+
 class Cell {
   constructor(i, j, w) {
     this.i = i;
@@ -121,12 +121,12 @@ class Cell {
   }
 }
 
-// 检查是否是必须揭示的格子
+
 function checkMustReveal(i, j) {
   return mustReveal.some(pos => pos[0] === i && pos[1] === j);
 }
 
-// 显示消息
+
 function displayMessage(message) {
   let status = document.getElementById('status');
   if (status) {
