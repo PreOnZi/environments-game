@@ -2,19 +2,18 @@
 let grid;
 let cols;
 let rows;
-const w = 60;  // Width of each cell
-let showOrangeCircle = false; // 
-let showRedCircle = false; // Variable to control the display of the red circle
+const w = 60; // Width of each cell
+let showOrangeCircle = false; // Variable to control the display of the orange circle
 let orangeCircleTimer = 0; // Timer to control the duration of the orange circle
-let redCircleTimer = 0; // Timer to control the duration of the red circle
 const circleDuration = 60; // Duration of the circle in frames (approx 2 seconds)
 
 // Positions for the mines
-const fixedMinePositions = [[0,0],
+const fixedMinePositions = [
+  [0, 0],
   [2, 4], [9, 5], [4, 3], [9, 2], [5, 8], [7, 7], [1, 5], [5, 4], [4, 5], [6, 5], [5, 5], [3, 6], [4, 8], [6, 2], [5, 4], [4, 4], [5, 1], [6, 1], [1, 2], [8, 6]
 ];
-const fixedPunchPositions = [[7,9], [3,3], [0,4], [9,0]];
-const fixedBrickPositions = [[9, 9], [9, 4], [0,8], [2, 9], [3, 1]];
+const fixedPunchPositions = [[7, 9], [3, 3], [0, 4], [9, 0]];
+const fixedBrickPositions = [[9, 9], [9, 4], [0, 8], [2, 9], [3, 1]];
 
 // Cell class definition
 class Cell {
@@ -35,12 +34,8 @@ class Cell {
     stroke(0);
     if (this.revealed) {
       if (this.bee) {
-        fill(127); // Dark gray for the bee
+        fill('black');
         ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
-        if (showOrangeCircle) {
-          fill('red'); // Red color for gray mines
-          ellipse(width / 2, height / 2, w * 2);
-        }
       } else if (this.fixedBrick) {
         fill(0, 0, 255); // Blue color for fixed bricks
         ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
@@ -83,14 +78,11 @@ class Cell {
     this.revealed = true;
     if (this.neighborCount == 0) {
       this.floodFill();
-      // Display the orange circle when an orange mine is discovered
-      showOrangeCircle = true;
-      orangeCircleTimer = circleDuration; // Start the timer
     }
     if (this.bee) {
-      // Display the red circle when a gray mine is discovered
-      showRedCircle = true;
-      redCircleTimer = circleDuration; // Start the timer
+      // Display the red circle when a black mine is discovered
+      fill('red');
+      ellipse(width / 2, height / 2, w * 2); // Large circle at the center of the canvas
     }
     if (this.fixedPunch) {
       // Display the orange circle when an orange mine is discovered
@@ -133,7 +125,7 @@ function setup() {
   cols = floor(width / w);
   rows = floor(height / w);
   grid = make2DArray(cols, rows);
-  
+
   // Placing mines at fixed positions
   fixedMinePositions.forEach(pos => {
     let i = pos[0], j = pos[1];
@@ -148,7 +140,7 @@ function setup() {
       grid[i][j].fixedBrick = true;
     }
   });
-   // Placing fixed punch mines at fixed positions
+  // Placing fixed punch mines at fixed positions
   fixedPunchPositions.forEach(pos => {
     let i = pos[0], j = pos[1];
     if (i < cols && j < rows) {
@@ -171,9 +163,6 @@ function mousePressed() {
     if (i >= 0 && i < cols && j >= 0 && j < rows) {
       if (grid[i][j].contains(mouseX, mouseY)) {
         grid[i][j].reveal();
-        if (grid[i][j].bee) {
-          gameOver();
-        }
       }
     }
   }
@@ -183,7 +172,7 @@ function mousePressed() {
 // Drawing the grid and cells
 function draw() {
   background(255);
-  // Display the orange or red circle if needed
+  // Display the orange circle if needed
   if (showOrangeCircle) {
     fill(255, 165, 0, 150); // Semi-transparent orange color
     ellipse(width / 2, height / 2, w * 2); // Large circle at the center of the canvas
@@ -192,15 +181,6 @@ function draw() {
     // Hide the orange circle when the timer reaches 0
     if (orangeCircleTimer <= 0) {
       showOrangeCircle = false;
-    }
-  } else if (showRedCircle) {
-    fill('red'); // Red color for gray mines
-    ellipse(width / 2, height / 2, w * 2); // Large circle at the center of the canvas
-    // Decrease the timer
-    redCircleTimer--;
-    // Hide the red circle when the timer reaches 0
-    if (redCircleTimer <= 0) {
-      showRedCircle = false;
     }
   }
   grid.forEach(row => row.forEach(cell => cell.show()));
