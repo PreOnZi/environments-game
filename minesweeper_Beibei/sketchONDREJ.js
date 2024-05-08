@@ -74,10 +74,11 @@ class Cell {
     this.neighborCount = total;
   }
 
+
   reveal() {
     this.revealed = true;
     if (this.neighborCount == 0) {
-      this.floodFill();
+      // this.floodFill();
     }
     if (this.bee) {
       // Display the red circle when a black mine is discovered
