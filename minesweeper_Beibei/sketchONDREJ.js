@@ -6,6 +6,9 @@ const w = 60; // Width of each cell
 let showOrangeCircle = false; // Variable to control the display of the orange circle
 let orangeCircleTimer = 0; // Timer to control the duration of the orange circle
 const circleDuration = 60; // Duration of the circle in frames (approx 2 seconds)
+let showBlueBox = false; // Variable to control the display of the blue box
+let blueBoxTimer = 0; // Timer to control the duration of the blue box display
+
 
 // Positions for the mines
 const fixedMinePositions = [
@@ -35,10 +38,15 @@ class Cell {
     if (this.revealed) {
       if (this.bee) {
         fill('black');
-        ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
+        rect(this.x, this.y, this.w, this.w); // Display black rectangle for black mine
       } else if (this.fixedBrick) {
         fill(0, 0, 255); // Blue color for fixed bricks
-        ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
+        rect(this.x, this.y, this.w, this.w); // Display blue rectangle for blue mine
+        if (showBlueBox) {
+          fill(255);
+          textSize(20);
+          text("Blue Mine Found!", this.x + this.w / 4, this.y + this.w / 2);
+        }
       } else if (this.fixedPunch) {
         fill(255, 165, 0); // Orange color for fixed punch
         ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
@@ -75,22 +83,29 @@ class Cell {
   }
 
 
-  reveal() {
-    this.revealed = true;
-    if (this.neighborCount == 0) {
-      // this.floodFill();
-    }
-    if (this.bee) {
-      // Display the red circle when a black mine is discovered
-      fill('red');
-      ellipse(width / 2, height / 2, w * 2); // Large circle at the center of the canvas
-    }
-    if (this.fixedPunch) {
-      // Display the orange circle when an orange mine is discovered
-      showOrangeCircle = true;
-      orangeCircleTimer = circleDuration; // Start the timer
-    }
+reveal() {
+  this.revealed = true;
+  if (this.neighborCount == 0) {
+    // Implement flood fill if needed
   }
+  if (this.bee) {
+    // Display the black square for a black mine
+    showBlackSquare = true;
+    blackSquareTimer = circleDuration;  // Reuse the duration variable for consistency
+  }
+  if (this.fixedBrick) {
+    // Display text for the blue mine
+    showBlueText = true;
+    blueTextTimer = circleDuration;
+  }
+  if (this.fixedPunch) {
+    // Display the orange circle when an orange mine is discovered
+    showOrangeCircle = true;
+    orangeCircleTimer = circleDuration; // Start the timer
+  }
+}
+
+  
 
   floodFill() {
     for (let xoff = -1; xoff <= 1; xoff++) {
@@ -182,6 +197,20 @@ function draw() {
     // Hide the orange circle when the timer reaches 0
     if (orangeCircleTimer <= 0) {
       showOrangeCircle = false;
+    }
+  }
+  // Display the blue box with message if needed
+  if (showBlueBox) {
+    fill(0, 0, 255, 150); // Semi-transparent blue color
+    rect(width / 4, height / 4, width / 2, height / 2); // Blue box at the center of the canvas
+    fill(255);
+    textSize(32);
+    text("Blue Mine Found!", width / 4 + 20, height / 4 + 50);
+    // Decrease the timer
+    blueBoxTimer--;
+    // Hide the blue box when the timer reaches 0
+    if (blueBoxTimer <= 0) {
+      showBlueBox = false;
     }
   }
   grid.forEach(row => row.forEach(cell => cell.show()));
