@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Courier, monospace;
+            text-align: center;
+            background: url('main page Large.png') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content {
+            width: 80%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.5); /* 半透明黑色背景 */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: white;
+            font-size: 36px;
+        }
+
+        .description {
+            margin-bottom: 20px;
+            color: white;
+            font-size: 18px;
+        }
+
+        .game-image {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .next-button {
+            position: absolute;
+            bottom: 70px; /* 距离底部70px */
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: transparent;
+            background-image: url('bottom.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: rgba(179, 179, 179, 0.751);
+            border: none;
+            width: 150px;
+            height: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .next-button:hover {
+            color: rgb(0, 0, 0);
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Introduction</h1>
+        <p class="description">
+            Welcome to our game! Here we will guide you through the adventures and
+            challenges you will encounter in this thrilling experience.
+        </p>
+        <img src="game-intro-image.jpg" alt="Game Introduction" class="game-image">
+    </div>
+
+    <button class="next-button" onclick="nextPage()">Next</button>
+
+    <script>
+        function nextPage() {
+            window.location.href = 'next_page.html'; // 修改为实际的目标页面
+        }
+    </script>
+</body>
+</html>
