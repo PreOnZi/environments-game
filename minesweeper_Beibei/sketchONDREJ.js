@@ -9,6 +9,8 @@ const circleDuration = 60; // Duration of the circle in frames (approx 2 seconds
 let showBlueBox = false; // Variable to control the display of the blue box
 let blueBoxTimer = 0; // Timer to control the duration of the blue box display
 
+let port;
+let connectBtn;
 
 // Positions for the mines
 const fixedMinePositions = [
@@ -82,30 +84,28 @@ class Cell {
     this.neighborCount = total;
   }
 
-
-reveal() {
-  this.revealed = true;
-  if (this.neighborCount == 0) {
-    // Implement flood fill if needed
+  reveal() {
+    this.revealed = true;
+    if (this.neighborCount == 0) {
+      // Implement flood fill if needed
+    }
+    if (this.bee) {
+      // Display the black square for a black mine
+      showBlackSquare = true;
+      blackSquareTimer = circleDuration;  // Reuse the duration variable for consistency
+    }
+    if (this.fixedBrick) {
+      // Display text for the blue mine
+      showBlueBox = true;
+      blueBoxTimer = circleDuration;
+    }
+    if (this.fixedPunch) {
+      // Send signal to Arduino when an orange mine is discovered
+      if (port.opened()) {
+        port.write("OrangeMine\n");
+      }
+    }
   }
-  if (this.bee) {
-    // Display the black square for a black mine
-    showBlackSquare = true;
-    blackSquareTimer = circleDuration;  // Reuse the duration variable for consistency
-  }
-  if (this.fixedBrick) {
-    // Display text for the blue mine
-    showBlueText = true;
-    blueTextTimer = circleDuration;
-  }
-  if (this.fixedPunch) {
-    // Display the orange circle when an orange mine is discovered
-    showOrangeCircle = true;
-    orangeCircleTimer = circleDuration; // Start the timer
-  }
-}
-
-  
 
   floodFill() {
     for (let xoff = -1; xoff <= 1; xoff++) {
@@ -141,6 +141,18 @@ function setup() {
   cols = floor(width / w);
   rows = floor(height / w);
   grid = make2DArray(cols, rows);
+
+  // Serial Port Initialization
+  port = createSerial();
+
+  // Creating a separate div for the connect button
+  let buttonDiv = createDiv('');
+  buttonDiv.position(20, 20);
+
+  // Creating the connect button
+  connectBtn = createButton('Connect to Arduino');
+  connectBtn.parent(buttonDiv);
+  connectBtn.mousePressed(connectBtnClick);
 
   // Placing mines at fixed positions
   fixedMinePositions.forEach(pos => {
@@ -213,6 +225,7 @@ function draw() {
       showBlueBox = false;
     }
   }
+  // Draw the grid cells
   grid.forEach(row => row.forEach(cell => cell.show()));
 }
 
@@ -226,4 +239,14 @@ function make2DArray(cols, rows) {
     }
   }
   return arr;
+}
+
+function connectBtnClick() {
+  if (!port.opened()) {
+    port.open('Arduino', 57600);
+    connectBtn.html('Disconnect');
+  } else {
+    port.close();
+    connectBtn.html('Connect to Arduino');
+  }
 }
