@@ -58,7 +58,7 @@ class Cell {
           fill(255);
           textSize(10);
           textAlign(CENTER, CENTER);
-          text("Take a\nbrick!", this.x + this.w / 2, this.y + this.w / 2);
+          text("Give a\nbrick!", this.x + this.w / 2, this.y + this.w / 2);
         }
       } else if (this.fixedPunch) {
         fill(255, 165, 0);
