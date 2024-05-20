@@ -8,8 +8,8 @@ int originalPosition = 1500; // Original position of the servo (1500 microsecond
 
 void setup() {
   // Initialize serial communication for debugging
-  Serial.begin(115200);
-
+  //Serial.begin(115200);
+Serial.begin(9600);
   // Attach the servo to its pin
   myServo.attach(servoPin);
 
