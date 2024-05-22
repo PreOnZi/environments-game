@@ -1,7 +1,7 @@
 let grid;
 let cols;
 let rows;
-const w = 60;
+const w = 100;
 let showOrangeCircle = false;
 const circleDuration = 60;
 let showBlueBox = false;
@@ -43,20 +43,40 @@ class Cell {
     this.fixedBrick = false;
     this.fixedPunch = false;
     this.revealed = false;
+    this.setColor();
   }
+  //UNCOVERED GRID COLOURS
+  setColor() {
+    let r = floor(random(4)); 
+    switch (r) {
+      case 0:
+        this.color = color(0, 0, 255); // Blue
+        break;
+      case 1:
+        this.color = color(255, 0, 0); // Red
+        break;
+      case 2:
+        this.color = color(0, 255, 0); // Green
+        break;
+      case 3:
+        this.color = color(255, 255, 0); // Yellow
+        break;
+    }}
+    //
 
   show() {
-    stroke(0);
+    stroke(255);
     if (this.revealed) {
       if (this.bee) {
-        fill('black');
+        fill('white');
         ellipse(this.x + this.w * 0.5, this.y + this.w * 0.5, this.w * 0.5);
       } else if (this.fixedBrick) {
-        fill(0, 0, 255);
+        fill('white');
         rect(this.x, this.y, this.w, this.w);
         if (showBlueBox) {
-          fill(255);
-          textSize(10);
+
+          fill('blue');
+          textSize(20);
           textAlign(CENTER, CENTER);
           text("Give a\nbrick!", this.x + this.w / 2, this.y + this.w / 2);
         }
@@ -71,11 +91,12 @@ class Cell {
         if (this.isNeighborBlueBrick()) {
           fill(0, 0, 255);
           textSize(16);
+          noStroke();
           text(this.neighborCount, this.x + this.w * 0.5, this.y + this.w * 0.5);
         } 
       }
     } else {
-      fill(250);
+      fill(this.color);
       rect(this.x, this.y, this.w, this.w);
     }
   }
@@ -147,16 +168,46 @@ function preload() {
 }
 // SETUP
 function setup() {
-  createCanvas(660, 660);
+  createCanvas(2100, 2100);
   cols = 10;
   rows = 10; 
   grid = make2DArray(cols, rows);
   port = createSerial();
   let buttonDiv = createDiv('');
-  buttonDiv.position(1, 1);
+  buttonDiv.position(1100, 200);
   connectBtn = createButton('Connect to Arduino');
   connectBtn.parent(buttonDiv);
   connectBtn.mousePressed(connectBtnClick);
+
+  //TEXT ABOVE BUTTON
+  let title = createP('Let\'s sweep some mines!')
+  title.parent(buttonDiv);
+  title.style('font-size', '45px');
+ title.style('font-family', 'Avenir');
+ title.style('color', 'white');
+  let infoText = createP('First,');
+  infoText.parent(buttonDiv);
+  infoText.style('font-size', '45px');
+  infoText.style('font-family', 'Avenir');
+  infoText.style('margin-bottom', '30px');
+  infoText.style('color', 'white');
+//
+buttonDiv.child(title)
+buttonDiv.child(infoText);
+buttonDiv.child(connectBtn);
+
+  // CONNECT BUTTON STYLING
+  connectBtn.style('font-size', '25px');
+  connectBtn.style('font-family', 'Avenir');
+  connectBtn.style('padding', '30px 60px');
+  connectBtn.style('border', 'none');
+  connectBtn.style('border-radius', '25px'); 
+  connectBtn.style('background', 'linear-gradient(45deg, #6fb1fc, #4364f7)'); // Gradient background
+  connectBtn.style('color', 'white');
+  connectBtn.style('cursor', 'pointer');
+  connectBtn.style('transition', 'background 0.3s, transform 0.3s');
+//
+
   fixedMinePositions.forEach(pos => {
     let i = pos[0], j = pos[1];
     if (i < cols && j < rows) {
@@ -198,7 +249,7 @@ function mousePressed() {
 
 
 function draw() {
-  background(255);
+background('black');
   if (showOrangeCircle) {
     fill(255, 165, 0, 150);
     ellipse(width / 2, height / 2, w * 2);
