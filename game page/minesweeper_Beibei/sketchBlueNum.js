@@ -249,7 +249,38 @@ function mousePressed() {
 
 
 function draw() {
-background('black');
+  background('black');
+
+  // Draw the grid
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      grid[i][j].show();
+    }
+  }
+
+  // GRID NUMBERS
+  textSize(32);
+  fill('yellow');
+  noStroke();
+  for (let i = 0; i < cols; i++) {
+    let x = i * w + w / 2;
+    let y = rows * w + 25; 
+    textAlign(CENTER, CENTER);
+    text(i + 1, x, y);
+  }
+
+  // GRID LETTERS
+  textSize(32);
+  fill('red');
+  noStroke();
+  for (let j = 0; j < rows; j++) {
+    let x = cols * w + 25; 
+    let y = j * w + w / 2;
+    textAlign(CENTER, CENTER);
+    text(String.fromCharCode(97 + j), x, y); 
+  }
+
+  // Draw the orange circle if needed
   if (showOrangeCircle) {
     fill(255, 165, 0, 150);
     ellipse(width / 2, height / 2, w * 2);
@@ -258,8 +289,8 @@ background('black');
       showOrangeCircle = false;
     }
   }
-  grid.forEach(row => row.forEach(cell => cell.show()));
 }
+
 
 // 2D ARRAY
 function make2DArray(cols, rows) {
