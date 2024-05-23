@@ -9,12 +9,11 @@ let port;
 let connectBtn;
 let blackMineDiscoveredSound;
 
-
 // Positions for the mines
 const fixedMinePositions = [
   [0, 2], [0, 1], [1, 2], [1, 1], [2, 3], [3, 2], [2, 4], [4, 2], 
   [3, 7], [3, 8], [4, 7], [4, 8], [5, 6], [6, 5], [6, 6], [5, 5], 
-  [7, 1], [7, 2], [8, 1], [8, 2], [9, 0], [9, 1], [9, 2], [9, 3], [9,9]
+  [7, 1], [7, 2], [8, 1], [8, 2], [9, 0], [9, 1], [9, 2], [9, 3], [9, 9]
 ];
 
 const fixedPunchPositions = [
@@ -28,7 +27,6 @@ const fixedBrickPositions = [
   [0, 5], [0, 6], [1, 5], [1, 6], [2, 7], [2, 8], [3, 7], [3, 8], 
   [5, 0], [6, 0], [5, 1], [6, 1], [8, 6], [8, 7], [9, 6], [9, 7], [6, 8] 
 ];
-
 
 // CELL CLASS
 class Cell {
@@ -45,7 +43,8 @@ class Cell {
     this.revealed = false;
     this.setColor();
   }
-  //UNCOVERED GRID COLOURS
+
+  // UNCOVERED GRID COLOURS
   setColor() {
     let r = floor(random(4)); 
     switch (r) {
@@ -61,8 +60,8 @@ class Cell {
       case 3:
         this.color = color(255, 255, 0); // Yellow
         break;
-    }}
-    //
+    }
+  }
 
   show() {
     stroke(255);
@@ -74,7 +73,6 @@ class Cell {
         fill('white');
         rect(this.x, this.y, this.w, this.w);
         if (showBlueBox) {
-
           fill('blue');
           textSize(20);
           textAlign(CENTER, CENTER);
@@ -122,11 +120,9 @@ class Cell {
     this.revealed = true;
     if (this.bee) {
       blackMineDiscoveredSound.play();
-   
     }
     if (this.fixedBrick) {
       showBlueBox = true;
-    
     }
     if (this.fixedPunch) {
       if (port.opened()) {
@@ -162,10 +158,12 @@ class Cell {
     return false;
   }
 }
-//PRELOAD
+
+// PRELOAD
 function preload() {
   blackMineDiscoveredSound = loadSound('sound.mp3');
 }
+
 // SETUP
 function setup() {
   createCanvas(2100, 2100);
@@ -173,41 +171,50 @@ function setup() {
   rows = 10; 
   grid = make2DArray(cols, rows);
   port = createSerial();
+
+  // DIV FOR QR AND BUTTON
   let buttonDiv = createDiv('');
   buttonDiv.position(1100, 200);
-  connectBtn = createButton('Connect to Arduino');
-  connectBtn.parent(buttonDiv);
-  connectBtn.mousePressed(connectBtnClick);
 
-  //TEXT ABOVE BUTTON
-  let title = createP('Let\'s sweep some mines!')
-  title.parent(buttonDiv);
-  title.style('font-size', '45px');
- title.style('font-family', 'Avenir');
- title.style('color', 'white');
+  
   let infoText = createP('First,');
   infoText.parent(buttonDiv);
   infoText.style('font-size', '45px');
   infoText.style('font-family', 'Avenir');
   infoText.style('margin-bottom', '30px');
   infoText.style('color', 'white');
-//
-buttonDiv.child(title)
-buttonDiv.child(infoText);
-buttonDiv.child(connectBtn);
-
-  // CONNECT BUTTON STYLING
+  
+  // Add connect button
+  connectBtn = createButton('Connect to Arduino');
+  connectBtn.parent(buttonDiv);
+  connectBtn.mousePressed(connectBtnClick);
   connectBtn.style('font-size', '25px');
   connectBtn.style('font-family', 'Avenir');
   connectBtn.style('padding', '30px 60px');
   connectBtn.style('border', 'none');
   connectBtn.style('border-radius', '25px'); 
-  connectBtn.style('background', 'linear-gradient(45deg, #6fb1fc, #4364f7)'); // Gradient background
+  connectBtn.style('background', 'linear-gradient(45deg, #6fb1fc, #4364f7)');
   connectBtn.style('color', 'white');
-  connectBtn.style('cursor', 'pointer');
   connectBtn.style('transition', 'background 0.3s, transform 0.3s');
-//
+  connectBtn.style('margin-bottom', '20px'); 
 
+
+ // TITLE
+ let title = createP("Share your build:");
+ title.parent(buttonDiv);
+ title.style('font-size', '30px');
+ title.style('font-family', 'Avenir');
+ title.style('color', 'white');
+    
+
+  // QR
+  let qrCode = createImg('ResultsQR.png'); 
+  qrCode.parent(buttonDiv);
+  qrCode.size(250,250);
+  qrCode.style('display', 'block');
+  qrCode.style('margin-top', '20px');
+
+  // Initialize grid with fixed positions
   fixedMinePositions.forEach(pos => {
     let i = pos[0], j = pos[1];
     if (i < cols && j < rows) {
@@ -226,6 +233,8 @@ buttonDiv.child(connectBtn);
       grid[i][j].fixedPunch = true;
     }
   });
+
+  // Count neighbors for each cell
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       grid[i][j].countBees();
@@ -233,7 +242,7 @@ buttonDiv.child(connectBtn);
   }
 }
 
-// MOUSEP PRESS
+// MOUSE PRESS
 function mousePressed() {
   if (mouseX >= 0 && mouseX < width && mouseY >= 0 && mouseY < height) {
     let i = floor(mouseX / w);
@@ -247,7 +256,7 @@ function mousePressed() {
   return false;
 }
 
-
+// DRAW FUNCTION
 function draw() {
   background('black');
 
@@ -258,7 +267,7 @@ function draw() {
     }
   }
 
-  // GRID NUMBERS
+  // Draw the grid numbers
   textSize(32);
   fill('yellow');
   noStroke();
@@ -269,7 +278,7 @@ function draw() {
     text(i + 1, x, y);
   }
 
-  // GRID LETTERS
+  // Draw the grid letters
   textSize(32);
   fill('red');
   noStroke();
@@ -291,8 +300,7 @@ function draw() {
   }
 }
 
-
-// 2D ARRAY
+// 2D ARRAY FUNCTION
 function make2DArray(cols, rows) {
   let arr = new Array(cols);
   for (let i = 0; i < cols; i++) {
@@ -304,10 +312,11 @@ function make2DArray(cols, rows) {
   return arr;
 }
 
+// CONNECT BUTTON CLICK HANDLER
 function connectBtnClick() {
   if (!port.opened()) {
     port.open('Arduino', 57600);
-    connectBtn.html('Disconnect');
+    connectBtn.html('find, avoid, buil, talk');
   } else {
     port.close();
     connectBtn.html('Connect to Arduino');
