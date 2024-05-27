@@ -316,7 +316,7 @@ function make2DArray(cols, rows) {
 function connectBtnClick() {
   if (!port.opened()) {
     port.open('Arduino', 57600);
-    connectBtn.html('find, avoid, buil, talk');
+    connectBtn.html('find, avoid, build, talk');
   } else {
     port.close();
     connectBtn.html('Connect to Arduino');
