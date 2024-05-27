@@ -1,4 +1,4 @@
-# environments-game
+# think after you talk
 Beibei Liu, Ondrej Zika, Ting Du
 <br>
 <b>Contents:</b>
