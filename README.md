@@ -19,5 +19,5 @@ Blame:
 Ting: Main page
 <br>
 Beibei: Battleship, maze, base of minesweeper
-<be>
+<br>
 Ondrej: Arduino (sketch_may13a), polish and connection of Minesweeper code
