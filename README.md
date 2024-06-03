@@ -16,7 +16,7 @@ Start the experience: game page > main page.html
 
 Blame:
 <br>
-Ting: Main page
+Ting: Main page (game page)
 <br>
 Beibei: Battleship, maze, base of minesweeper
 <br>
