@@ -8,3 +8,16 @@ Beibei Liu, Ondrej Zika, Ting Du
     <li>Old versions of files and branches we did not end up developing</li>
     <li>Final code: P5, Arduino</li>
 </ul>
+<br>
+Structure:
+<br>
+Start the experience: game page > main page.html
+<br>
+
+Blame:
+<br>
+Ting: Main page
+<br>
+Beibei: Battleship, maze, base of minesweeper
+<be>
+Ondrej: Arduino (sketch_may13a), polish and connection of Minesweeper code
